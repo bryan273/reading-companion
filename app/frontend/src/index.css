@@ -1,0 +1,115 @@
+@import url('https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:ital,wght@0,400;0,500;0,600;1,400&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: 220 23% 97.6%;
+    --foreground: 212 39% 13%;
+    --card: 0 0% 100%;
+    --card-foreground: 212 39% 13%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 212 39% 13%;
+    --primary: 214 64% 33%;
+    --primary-foreground: 0 0% 100%;
+    --primary-soft: 213 58% 93%;
+    --secondary: 213 39% 95%;
+    --secondary-foreground: 212 39% 13%;
+    --muted: 213 39% 95%;
+    --muted-foreground: 212 17% 35%;
+    --subtle: 212 12% 47%;
+    --accent: 213 39% 95%;
+    --accent-foreground: 212 39% 13%;
+    --destructive: 0 47% 43%;
+    --destructive-foreground: 0 0% 100%;
+    --warning: 36 77% 31%;
+    --warning-soft: 39 81% 93%;
+    --success: 152 39% 30%;
+    --border: 214 24% 89%;
+    --input: 214 24% 89%;
+    --ring: 214 64% 33%;
+    --radius: 0.75rem;
+  }
+
+  .dark {
+    --background: 212 32% 8%;
+    --foreground: 210 33% 93%;
+    --card: 213 30% 12%;
+    --card-foreground: 210 33% 93%;
+    --popover: 213 30% 12%;
+    --popover-foreground: 210 33% 93%;
+    --primary: 214 58% 68%;
+    --primary-foreground: 212 32% 8%;
+    --primary-soft: 214 41% 18%;
+    --secondary: 214 29% 15%;
+    --secondary-foreground: 210 33% 93%;
+    --muted: 214 29% 15%;
+    --muted-foreground: 211 18% 72%;
+    --subtle: 211 10% 55%;
+    --accent: 214 29% 15%;
+    --accent-foreground: 210 33% 93%;
+    --destructive: 0 59% 70%;
+    --destructive-foreground: 212 32% 8%;
+    --warning: 37 67% 65%;
+    --warning-soft: 42 55% 13%;
+    --success: 150 39% 63%;
+    --border: 212 24% 22%;
+    --input: 212 24% 22%;
+    --ring: 214 58% 68%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  html,
+  body {
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  body {
+    @apply bg-background text-foreground font-sans antialiased;
+    font-size: 16px;
+    line-height: 1.65;
+  }
+  h1,
+  h2,
+  h3 {
+    @apply font-serif;
+    font-optical-sizing: auto;
+  }
+  :focus-visible {
+    outline: 2px solid hsl(var(--ring));
+    outline-offset: 2px;
+  }
+}
+
+@layer utilities {
+  .caption {
+    @apply text-xs font-medium uppercase;
+    letter-spacing: 0.08em;
+  }
+  .fade-in {
+    animation: rc-fade 180ms ease-out;
+  }
+}
+
+@keyframes rc-fade {
+  from {
+    opacity: 0.2;
+    transform: translateY(3px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fade-in {
+    animation: none;
+  }
+}

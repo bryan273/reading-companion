@@ -1,0 +1,74 @@
+{
+    "title": "sessions",
+    "type": "object",
+    "properties": {
+        "id": {
+            "type": "integer",
+            "description": "autoincrement id"
+        },
+        "share_id": {
+            "type": "string",
+            "description": "random public share slug"
+        },
+        "goal": {
+            "type": "string",
+            "format": "text"
+        },
+        "paper_id": {
+            "type": "string"
+        },
+        "language": {
+            "type": "string",
+            "description": "en or zh"
+        },
+        "answer": {
+            "type": "string",
+            "format": "text"
+        },
+        "plan_json": {
+            "type": "string",
+            "format": "text",
+            "description": "JSON array of plan steps"
+        },
+        "notes_json": {
+            "type": "string",
+            "format": "text",
+            "description": "JSON array of notes {paper_id,text,quote}"
+        },
+        "sources_json": {
+            "type": "string",
+            "format": "text",
+            "description": "JSON array of sources {n,id,title}"
+        },
+        "self_check": {
+            "type": "string",
+            "format": "text"
+        },
+        "steps_json": {
+            "type": "string",
+            "format": "text",
+            "description": "JSON array of timeline tool calls"
+        },
+        "prompt_tokens": {
+            "type": "integer"
+        },
+        "completion_tokens": {
+            "type": "integer"
+        },
+        "total_tokens": {
+            "type": "integer"
+        },
+        "turns": {
+            "type": "integer"
+        },
+        "visitor": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "share_id",
+        "goal",
+        "answer",
+        "language"
+    ]
+}
