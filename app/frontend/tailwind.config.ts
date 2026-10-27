@@ -21,10 +21,13 @@ export default {
       },
     },
     extend: {
+      screens: {
+        nav: '900px',
+      },
       fontFamily: {
-        serif: ['Fraunces', 'Georgia', 'Noto Serif SC', 'serif'],
-        sans: ['IBM Plex Sans', 'system-ui', 'PingFang SC', 'Microsoft YaHei', 'sans-serif'],
-        mono: ['IBM Plex Mono', 'ui-monospace', 'SFMono-Regular', 'monospace'],
+        sans: ['Inter', 'Noto Sans SC', 'system-ui', '-apple-system', 'Segoe UI', 'sans-serif'],
+        serif: ['Inter', 'Noto Sans SC', 'system-ui', 'sans-serif'],
+        mono: ['JetBrains Mono', 'ui-monospace', 'Consolas', 'monospace'],
       },
       colors: {
         'primary-soft': 'hsl(var(--primary-soft))',
@@ -33,7 +36,11 @@ export default {
           DEFAULT: 'hsl(var(--warning))',
           soft: 'hsl(var(--warning-soft))',
         },
-        success: 'hsl(var(--success))',
+        success: {
+          DEFAULT: 'hsl(var(--success))',
+          soft: 'hsl(var(--success-soft))',
+        },
+        'destructive-soft': 'hsl(var(--destructive-soft))',
         border: 'hsl(var(--border))',
         input: 'hsl(var(--input))',
         ring: 'hsl(var(--ring))',

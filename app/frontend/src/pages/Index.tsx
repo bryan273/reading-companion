@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, Copy, Loader2, Square } from 'lucide-react';
-import AppHeader from '@/components/AppHeader';
+import AppShell from '@/components/AppShell';
 import RunView from '@/components/RunView';
 import { AgentError, emptyRun, parseArxivId, runAgent, type AgentRun } from '@/lib/agent';
 import { usePrefs } from '@/lib/prefs';
@@ -108,124 +108,118 @@ export default function Index() {
   const examples = [t('ex1'), t('ex2'), t('ex3')];
 
   return (
-    <div className="min-h-screen">
-      <AppHeader />
-      <main className="mx-auto max-w-[1200px] px-5 sm:px-8">
-        <section className="grid gap-10 py-10 sm:py-16 lg:grid-cols-[minmax(0,6fr)_minmax(0,5fr)] lg:gap-14">
-          <div className="min-w-0">
-            <p className="caption text-primary">{t('heroKicker')}</p>
-            <h1 className="mt-4 text-[36px] font-medium leading-[1.1] tracking-tight sm:text-[52px] sm:leading-[1.05]">
-              {t('heroTitle')}
-            </h1>
-            <p className="mt-5 max-w-xl text-[17px] leading-7 text-muted-foreground">{t('heroSub')}</p>
+    <AppShell>
+      <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)] xl:gap-10">
+        <div className="min-w-0">
+          <p className="eyebrow text-accent-foreground">{t('heroKicker')}</p>
+          <h1 className="mt-2.5 text-[30px] leading-[1.08] sm:text-[40px]">{t('heroTitle')}</h1>
+          <p className="mt-4 max-w-[54ch] text-[15px] leading-7 text-muted-foreground sm:text-[16px]">{t('heroSub')}</p>
 
-            <div className="mt-10 border-t border-border pt-6">
-              <p className="caption text-subtle">{t('examples')}</p>
-              <ol className="mt-3">
-                {examples.map((ex, i) => (
-                  <li key={i}>
-                    <button
-                      type="button"
-                      disabled={running}
-                      onClick={() => {
-                        setGoal(ex);
-                        setPaper('');
-                        start(ex, '');
-                      }}
-                      className="group flex w-full items-start gap-4 border-b border-border py-4 text-left transition-colors hover:bg-secondary/60 disabled:cursor-not-allowed disabled:opacity-60 sm:px-2"
-                    >
-                      <span className="pt-0.5 font-mono text-sm text-subtle">{String(i + 1).padStart(2, '0')}</span>
-                      <span className="min-w-0 flex-1 text-[15px] leading-6">{ex}</span>
-                      <ArrowRight className="mt-1 h-4 w-4 shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-primary" aria-hidden />
-                    </button>
-                  </li>
-                ))}
-              </ol>
-            </div>
+          <div id="examples" className="mt-8 scroll-mt-20">
+            <p className="eyebrow">{t('examples')}</p>
+            <ol className="mt-3 overflow-hidden rounded-[16px] border border-border bg-card">
+              {examples.map((ex, i) => (
+                <li key={i} className="border-b border-border last:border-b-0">
+                  <button
+                    type="button"
+                    disabled={running}
+                    onClick={() => {
+                      setGoal(ex);
+                      setPaper('');
+                      start(ex, '');
+                    }}
+                    className="group flex w-full items-start gap-3.5 px-4 py-3.5 text-left transition-colors hover:bg-secondary disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    <span className="mt-0.5 font-mono text-[12px] text-subtle">{String(i + 1).padStart(2, '0')}</span>
+                    <span className="min-w-0 flex-1 text-[13.5px] leading-6">{ex}</span>
+                    <ArrowRight
+                      className="mt-1 h-4 w-4 shrink-0 text-subtle transition-transform group-hover:translate-x-0.5 group-hover:text-primary"
+                      aria-hidden
+                    />
+                  </button>
+                </li>
+              ))}
+            </ol>
           </div>
+        </div>
 
-          <form
-            className="min-w-0 self-start rounded-xl border border-border bg-card p-5 shadow-[0_1px_2px_rgba(20,32,46,0.05)] sm:p-7 lg:sticky lg:top-[88px]"
-            onSubmit={(e) => {
-              e.preventDefault();
-              start(goal, paper);
+        <form
+          id="ask"
+          className="card h-fit scroll-mt-20 p-5 sm:p-6 xl:sticky xl:top-6"
+          onSubmit={(e) => {
+            e.preventDefault();
+            start(goal, paper);
+          }}
+        >
+          <label htmlFor="goal" className="block text-[16px] font-bold tracking-[-0.02em]">
+            {t('goalLabel')}
+          </label>
+          <textarea
+            id="goal"
+            value={goal}
+            onChange={(e) => setGoal(e.target.value)}
+            placeholder={t('goalPlaceholder')}
+            rows={4}
+            maxLength={1000}
+            disabled={running}
+            onKeyDown={(e) => {
+              if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                e.preventDefault();
+                start(goal, paper);
+              }
             }}
-          >
-            <label htmlFor="goal" className="block font-serif text-[22px] font-medium">
-              {t('goalLabel')}
-            </label>
-            <textarea
-              id="goal"
-              value={goal}
-              onChange={(e) => setGoal(e.target.value)}
-              placeholder={t('goalPlaceholder')}
-              rows={4}
-              maxLength={1000}
-              disabled={running}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  start(goal, paper);
-                }
-              }}
-              className="mt-3 w-full resize-y rounded-[10px] border border-input bg-background px-3.5 py-3 text-[16px] leading-6 placeholder:text-subtle focus:border-primary focus:outline-none disabled:opacity-60"
-            />
-            <label htmlFor="paper" className="mt-5 block text-sm font-medium text-muted-foreground">
-              {t('paperLabel')}
-            </label>
-            <input
-              id="paper"
-              value={paper}
-              onChange={(e) => setPaper(e.target.value)}
-              placeholder={t('paperPlaceholder')}
-              disabled={running}
-              className="mt-2 h-11 w-full rounded-[10px] border border-input bg-background px-3.5 font-mono text-sm placeholder:text-subtle focus:border-primary focus:outline-none disabled:opacity-60"
-            />
-            {formError && (
-              <p role="alert" className="mt-3 text-sm text-destructive">
-                {formError}
-              </p>
+            className="field mt-2.5 resize-y"
+          />
+          <label htmlFor="paper" className="mt-4 block text-[12.5px] font-semibold text-muted-foreground">
+            {t('paperLabel')}
+          </label>
+          <input
+            id="paper"
+            value={paper}
+            onChange={(e) => setPaper(e.target.value)}
+            placeholder={t('paperPlaceholder')}
+            disabled={running}
+            className="field mt-1.5 font-mono text-[13px]"
+          />
+          {formError && (
+            <p role="alert" className="mt-2.5 text-[13px] font-medium text-destructive">
+              {formError}
+            </p>
+          )}
+          <div className="mt-5 flex flex-wrap items-center gap-2.5">
+            {running ? (
+              <button type="button" onClick={() => abortRef.current?.abort()} className="btn btn-ghost btn-lg">
+                <Square className="h-3.5 w-3.5" aria-hidden />
+                {t('stop')}
+              </button>
+            ) : (
+              <button type="submit" className="btn btn-primary btn-lg">
+                {t('start')}
+                <ArrowRight className="h-4 w-4" aria-hidden />
+              </button>
             )}
-            <div className="mt-6 flex flex-wrap gap-3">
-              {running ? (
-                <button
-                  type="button"
-                  onClick={() => abortRef.current?.abort()}
-                  className="inline-flex h-11 items-center gap-2 rounded-lg border border-border bg-card px-5 text-[15px] font-medium text-foreground hover:bg-secondary"
-                >
-                  <Square className="h-3.5 w-3.5" aria-hidden />
-                  {t('stop')}
-                </button>
-              ) : (
-                <button
-                  type="submit"
-                  className="inline-flex h-11 items-center gap-2 rounded-lg bg-primary px-5 text-[15px] font-medium text-primary-foreground transition-colors hover:bg-primary/90"
-                >
-                  {t('start')}
-                  <ArrowRight className="h-4 w-4" aria-hidden />
-                </button>
-              )}
-              {running && (
-                <span className="inline-flex items-center gap-2 text-sm text-muted-foreground">
-                  <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
-                  {t('running')}
-                </span>
-              )}
-            </div>
-          </form>
-        </section>
+            {running && (
+              <span className="inline-flex items-center gap-2 text-[13px] text-muted-foreground">
+                <Loader2 className="h-4 w-4 animate-spin" aria-hidden />
+                {t('running')}
+              </span>
+            )}
+          </div>
+        </form>
+      </div>
 
-        {run && (
-          <section ref={workspaceRef} aria-live="polite" className="scroll-mt-20 border-t border-border py-10 sm:py-14">
-            <p className="caption text-subtle">{t('goal')}</p>
-            <h2 className="mt-2 text-[26px] font-medium leading-tight [overflow-wrap:anywhere]">{runGoal}</h2>
+      {run && (
+        <section ref={workspaceRef} aria-live="polite" className="mt-10 scroll-mt-20">
+          <div className="card p-5 sm:p-6">
+            <p className="eyebrow">{t('goal')}</p>
+            <h2 className="mt-1.5 text-[19px] leading-snug [overflow-wrap:anywhere]">{runGoal}</h2>
 
             {banner && (
               <div
                 role="status"
                 className={cn(
-                  'mt-5 rounded-xl border px-4 py-3 text-[15px]',
-                  banner.tone === 'error' && 'border-destructive/30 bg-destructive/10 text-destructive',
+                  'mt-4 rounded-[12px] border px-3.5 py-2.5 text-[13.5px]',
+                  banner.tone === 'error' && 'border-destructive/30 bg-destructive-soft text-destructive',
                   banner.tone === 'warning' && 'border-warning/30 bg-warning-soft text-warning',
                   banner.tone === 'info' && 'border-border bg-secondary text-muted-foreground'
                 )}
@@ -235,22 +229,18 @@ export default function Index() {
             )}
 
             {saveState !== 'idle' && saveState !== 'error' && (
-              <div className="mt-5 flex flex-col gap-3 rounded-xl border border-border bg-card px-4 py-3 sm:flex-row sm:items-center">
-                <span className="inline-flex items-center gap-2 text-[15px]">
+              <div className="mt-3.5 flex flex-col gap-2.5 rounded-[12px] border border-border bg-secondary px-3.5 py-2.5 sm:flex-row sm:items-center">
+                <span className="inline-flex items-center gap-2 text-[13.5px]">
                   {saveState === 'saving' ? <Loader2 className="h-4 w-4 animate-spin" /> : <Check className="h-4 w-4 text-success" />}
                   {saveState === 'saving' ? t('saving') : t('saved')}
                 </span>
                 {shareUrl && (
                   <div className="flex min-w-0 flex-1 flex-wrap items-center gap-2 sm:justify-end">
-                    <Link to={`/s/${shareId}`} className="min-w-0 truncate font-mono text-sm text-primary hover:underline">
+                    <Link to={`/s/${shareId}`} className="min-w-0 truncate font-mono text-[12.5px] text-primary hover:underline">
                       {shareUrl}
                     </Link>
-                    <button
-                      type="button"
-                      onClick={copy}
-                      className="inline-flex h-10 items-center gap-2 rounded-lg border border-border px-3 text-sm font-medium hover:bg-secondary"
-                    >
-                      {copied ? <Check className="h-4 w-4" /> : <Copy className="h-4 w-4" />}
+                    <button type="button" onClick={copy} className="btn btn-ghost h-9 px-3 text-[12.5px]">
+                      {copied ? <Check className="h-3.5 w-3.5" /> : <Copy className="h-3.5 w-3.5" />}
                       {copied ? t('copied') : t('copyLink')}
                     </button>
                   </div>
@@ -258,53 +248,53 @@ export default function Index() {
               </div>
             )}
 
-            <div className="mt-8">
+            <div className="mt-6">
               <RunView run={run} live={running} />
             </div>
-          </section>
-        )}
-
-        <section className="border-t border-border py-10 sm:py-16">
-          <h2 className="text-[26px] font-medium">{t('recent')}</h2>
-          <p className="mt-2 max-w-2xl text-[15px] text-muted-foreground">{t('recentSub')}</p>
-          {recent === null ? (
-            <div className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {[0, 1, 2].map((i) => (
-                <div key={i} className="h-32 animate-pulse rounded-xl border border-border bg-card" />
-              ))}
-            </div>
-          ) : recentError ? (
-            <p className="mt-6 text-sm text-destructive">{t('recentError')}</p>
-          ) : recent.length === 0 ? (
-            <p className="mt-6 text-sm text-muted-foreground">{t('recentEmpty')}</p>
-          ) : (
-            <ul className="mt-6 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {recent.map((r) => (
-                <li key={r.id}>
-                  <Link
-                    to={`/s/${r.share_id}`}
-                    className="flex h-full flex-col rounded-xl border border-border bg-card p-5 transition-colors hover:border-primary/50"
-                  >
-                    <p className="line-clamp-3 font-serif text-[17px] font-medium leading-6 [overflow-wrap:anywhere]">{r.goal}</p>
-                    <div className="mt-auto flex flex-wrap gap-x-3 gap-y-1 pt-4 text-xs text-muted-foreground">
-                      {r.paper_id && <span className="font-mono">arXiv {r.paper_id}</span>}
-                      <span>{r.language === 'zh' ? '中文' : 'EN'}</span>
-                      <span>
-                        {noteCount(r)} {lang === 'zh' ? '条笔记' : 'notes'}
-                      </span>
-                      <span>{t('tokens', { n: (r.total_tokens ?? 0).toLocaleString() })}</span>
-                      {r.created_at && <span>{new Date(r.created_at).toLocaleDateString(lang === 'zh' ? 'zh-CN' : 'en-US')}</span>}
-                    </div>
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          )}
+          </div>
         </section>
-      </main>
-      <footer className="border-t border-border">
-        <p className="mx-auto max-w-[1200px] px-5 py-8 text-sm text-subtle sm:px-8">{t('footer')}</p>
+      )}
+
+      <section id="recent" className="mt-12 scroll-mt-20">
+        <h2 className="text-[19px]">{t('recent')}</h2>
+        <p className="mt-1.5 max-w-[62ch] text-[13.5px] text-muted-foreground">{t('recentSub')}</p>
+        {recent === null ? (
+          <div className="mt-4 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+            {[0, 1, 2].map((i) => (
+              <div key={i} className="h-[132px] animate-pulse rounded-[16px] border border-border bg-card" />
+            ))}
+          </div>
+        ) : recentError ? (
+          <p className="mt-4 text-[13.5px] font-medium text-destructive">{t('recentError')}</p>
+        ) : recent.length === 0 ? (
+          <p className="mt-4 text-[13.5px] text-muted-foreground">{t('recentEmpty')}</p>
+        ) : (
+          <ul className="mt-4 grid gap-3.5 sm:grid-cols-2 lg:grid-cols-3">
+            {recent.map((r) => (
+              <li key={r.id}>
+                <Link
+                  to={`/s/${r.share_id}`}
+                  className="card flex h-full flex-col p-4 transition-colors hover:border-primary"
+                >
+                  <p className="line-clamp-3 text-[14px] font-semibold leading-6 [overflow-wrap:anywhere]">{r.goal}</p>
+                  <div className="mt-auto flex flex-wrap gap-x-2.5 gap-y-1 pt-3 font-mono text-[11px] text-muted-foreground">
+                    {r.paper_id && <span>arXiv {r.paper_id}</span>}
+                    <span>{r.language === 'zh' ? '中文' : 'EN'}</span>
+                    <span>
+                      {noteCount(r)} {lang === 'zh' ? '条笔记' : 'notes'}
+                    </span>
+                    <span>{t('tokens', { n: (r.total_tokens ?? 0).toLocaleString() })}</span>
+                  </div>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <footer className="mt-12 border-t border-border pt-6">
+        <p className="text-[12.5px] text-subtle">{t('footer')}</p>
       </footer>
-    </div>
+    </AppShell>
   );
 }
