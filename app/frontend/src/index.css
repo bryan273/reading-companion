@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@400;500;700&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -8,22 +8,22 @@
 @layer base {
   :root {
     color-scheme: light;
-    --background: 240 33% 99%;
-    --foreground: 240 3% 12%;
+    --background: 43 22% 96%;
+    --foreground: 240 14% 10%;
     --card: 0 0% 100%;
-    --card-foreground: 240 3% 12%;
+    --card-foreground: 240 14% 10%;
     --popover: 0 0% 100%;
-    --popover-foreground: 240 3% 12%;
-    --primary: 227 100% 58%;
+    --popover-foreground: 240 14% 10%;
+    --primary: 247 100% 65%;
     --primary-foreground: 0 0% 100%;
     --primary-soft: 228 100% 96%;
-    --secondary: 240 14% 96%;
-    --secondary-foreground: 240 3% 12%;
-    --muted: 240 14% 96%;
-    --muted-foreground: 240 5% 38%;
+    --secondary: 43 20% 93%;
+    --secondary-foreground: 240 14% 10%;
+    --muted: 43 20% 93%;
+    --muted-foreground: 240 7% 39%;
     --subtle: 240 4% 42%;
-    --accent: 228 100% 96%;
-    --accent-foreground: 227 100% 45%;
+    --accent: 257 100% 96%;
+    --accent-foreground: 247 100% 65%;
     --destructive: 0 66% 47%;
     --destructive-soft: 0 70% 95%;
     --destructive-foreground: 0 0% 100%;
@@ -31,30 +31,30 @@
     --warning-soft: 35 87% 94%;
     --success: 142 72% 29%;
     --success-soft: 140 40% 94%;
-    --border: 240 13% 91%;
-    --input: 240 13% 91%;
-    --ring: 227 100% 58%;
+    --border: 46 17% 88%;
+    --input: 46 17% 88%;
+    --ring: 247 100% 65%;
     --radius: 16px;
   }
 
   .dark {
     color-scheme: dark;
-    --background: 240 12% 5%;
-    --foreground: 240 10% 96%;
-    --card: 240 9% 9%;
-    --card-foreground: 240 10% 96%;
-    --popover: 240 9% 9%;
-    --popover-foreground: 240 10% 96%;
-    --primary: 228 100% 74%;
-    --primary-foreground: 240 12% 5%;
+    --background: 240 25% 5%;
+    --foreground: 240 25% 96%;
+    --card: 240 20% 9%;
+    --card-foreground: 240 25% 96%;
+    --popover: 240 20% 9%;
+    --popover-foreground: 240 25% 96%;
+    --primary: 246 100% 76%;
+    --primary-foreground: 240 25% 5%;
     --primary-soft: 232 44% 19%;
-    --secondary: 240 10% 12%;
-    --secondary-foreground: 240 10% 96%;
-    --muted: 240 10% 12%;
-    --muted-foreground: 240 3% 70%;
+    --secondary: 240 17% 12%;
+    --secondary-foreground: 240 25% 96%;
+    --muted: 240 17% 12%;
+    --muted-foreground: 240 12% 69%;
     --subtle: 240 4% 62%;
-    --accent: 232 44% 19%;
-    --accent-foreground: 228 100% 82%;
+    --accent: 244 42% 19%;
+    --accent-foreground: 246 100% 76%;
     --destructive: 0 91% 71%;
     --destructive-soft: 0 43% 16%;
     --destructive-foreground: 240 12% 5%;
@@ -62,9 +62,9 @@
     --warning-soft: 35 55% 13%;
     --success: 142 69% 58%;
     --success-soft: 145 44% 12%;
-    --border: 240 8% 18%;
-    --input: 240 8% 18%;
-    --ring: 228 100% 74%;
+    --border: 240 16% 17%;
+    --input: 240 16% 17%;
+    --ring: 246 100% 76%;
   }
 }
 
@@ -193,3 +193,11 @@
     animation: none;
   }
 }
+
+
+/* suite v3 glow: warm paper background with a soft violet, cyan and peach wash */
+body::before { content: ""; position: fixed; inset: 0; z-index: -1; pointer-events: none;
+  background: radial-gradient(55% 45% at 86% -8%, hsl(var(--primary) / 0.15), transparent 70%),
+              radial-gradient(40% 35% at 4% 6%, rgba(34, 195, 238, 0.11), transparent 70%),
+              radial-gradient(35% 30% at 60% 100%, rgba(255, 180, 138, 0.10), transparent 70%); }
+h1, h2, h3, .font-display { font-family: 'Space Grotesk', 'Inter', 'Noto Sans SC', system-ui, sans-serif; letter-spacing: -0.03em; }
