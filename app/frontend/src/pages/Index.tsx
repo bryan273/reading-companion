@@ -94,7 +94,7 @@ export default function Index() {
     }
   };
 
-  const shareUrl = shareId ? `${window.location.origin}/s/${shareId}` : '';
+  const shareUrl = shareId ? `${window.location.origin}${import.meta.env.BASE_URL.replace(/\/$/, '')}/s/${shareId}` : '';
   const copy = async () => {
     try {
       await navigator.clipboard.writeText(shareUrl);
