@@ -292,24 +292,32 @@ export async function runAgent({ goal, paperId, lang, signal, onUpdate }: RunOpt
   };
 
   async function callLLM(messages: LLMMessage[], withTools: boolean): Promise<LLMMessage> {
-    let res: Response;
-    try {
-      res = await fetch(LLM_URL, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          app: 'companion',
-          visitor: getVisitorId(),
-          messages,
-          ...(withTools ? { tools: TOOLS } : {}),
-          max_tokens: 2000,
-        }),
-        signal,
-      });
-    } catch (e) {
-      if (signal.aborted) throw new AgentError('aborted', 'aborted');
-      throw new AgentError('other', e instanceof Error ? e.message : 'Network error');
+    let res: Response | null = null;
+    // the gateway sometimes answers "busy" (503) or the connection drops: try again a couple of times before giving up
+    for (let attempt = 0; attempt < 3; attempt++) {
+      try {
+        res = await fetch(LLM_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            app: 'companion',
+            visitor: getVisitorId(),
+            messages,
+            ...(withTools ? { tools: TOOLS } : {}),
+            max_tokens: 2000,
+          }),
+          signal,
+        });
+      } catch (e) {
+        if (signal.aborted) throw new AgentError('aborted', 'aborted');
+        if (attempt === 2) throw new AgentError('other', e instanceof Error ? e.message : 'Network error');
+        await new Promise((r) => setTimeout(r, 3000 * (attempt + 1)));
+        continue;
+      }
+      if (res.status < 500 || attempt === 2) break;
+      await new Promise((r) => setTimeout(r, 3000 * (attempt + 1)));
     }
+    if (!res) throw new AgentError('other', 'Network error');
     if (res.status === 429) throw new AgentError('rate', 'rate limit');
     if (!res.ok) {
       const body = await res.text().catch(() => '');

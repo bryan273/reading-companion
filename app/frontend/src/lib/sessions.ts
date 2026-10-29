@@ -1,4 +1,4 @@
-import { client } from './api';
+import { suiteCall } from './suiteData';
 import { citedNumbers, getVisitorId, type AgentRun, type Note, type PaperMeta, type SelfCheck, type ToolEvent } from './agent';
 import type { Lang } from './prefs';
 
@@ -51,7 +51,9 @@ export async function saveSession(run: AgentRun, goal: string, paperId: string |
     return { id, title: p?.title ?? id, authors: p?.authors ?? [], published: p?.published ?? '', fullText: p?.fullText };
   });
   const steps = run.events.map((e) => ({ ...e, preview: e.preview.slice(0, 400) }));
-  await client.entities.reading_sessions.create({
+  await suiteCall({
+    op: 'create',
+    collection: 'reading_sessions',
     data: {
       share_id,
       goal,
@@ -74,18 +76,23 @@ export async function saveSession(run: AgentRun, goal: string, paperId: string |
 }
 
 export async function listRecentSessions(limit = 12): Promise<SessionRecord[]> {
-  const res = await client.entities.reading_sessions.query({
-    query: {},
-    sort: '-created_at',
+  const res = await suiteCall<{ items: SessionRecord[] }>({
+    op: 'list',
+    collection: 'reading_sessions',
     limit,
-    fields: ['id', 'share_id', 'goal', 'paper_id', 'language', 'total_tokens', 'turns', 'created_at', 'notes_json'],
+    fields: ['share_id', 'goal', 'paper_id', 'language', 'total_tokens', 'turns', 'notes_json'],
   });
-  return (res?.data?.items ?? []) as SessionRecord[];
+  return res.items ?? [];
 }
 
 export async function getSessionByShareId(shareId: string): Promise<SavedSession | null> {
-  const res = await client.entities.reading_sessions.query({ query: { share_id: shareId }, limit: 1 });
-  const record = (res?.data?.items ?? [])[0] as SessionRecord | undefined;
+  let record: SessionRecord | undefined;
+  try {
+    record = (await suiteCall<{ item: SessionRecord }>({ op: 'get', collection: 'reading_sessions', key: shareId })).item;
+  } catch (e) {
+    if ((e as { status?: number }).status === 404) return null;
+    throw e;
+  }
   if (!record) return null;
   const sources = parse<PaperMeta[]>(record.sources_json, []);
   const papers: Record<string, PaperMeta> = {};
