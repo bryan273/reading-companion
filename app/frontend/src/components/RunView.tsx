@@ -241,7 +241,7 @@ export default function RunView({ run, live }: { run: AgentRun; live: boolean })
       <div className="min-w-0">
         <div className="mb-5 flex flex-wrap gap-x-4 gap-y-1 font-mono text-[12px] text-muted-foreground">
           <span>{t('turns', { n: run.turns, max: MAX_TURNS })}</span>
-          <span>{t('tokens', { n: run.usage.total.toLocaleString() })}</span>
+          {run.usage.total > 0 && <span>{t('tokens', { n: run.usage.total.toLocaleString() })}</span>}
         </div>
         <ol>
           <Step id="stage-plan" index={1} title={t('stagePlan')} state={s('plan')}>

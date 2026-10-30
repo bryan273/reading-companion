@@ -313,7 +313,7 @@ export default function Index() {
                     <span>
                       {noteCount(r)} {lang === 'zh' ? '条笔记' : 'notes'}
                     </span>
-                    <span>{t('tokens', { n: (r.total_tokens ?? 0).toLocaleString() })}</span>
+                    {(r.total_tokens ?? 0) > 0 && <span>{t('tokens', { n: (r.total_tokens ?? 0).toLocaleString() })}</span>}
                   </div>
                 </Link>
               </li>
