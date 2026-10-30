@@ -5,10 +5,29 @@ import AppShell from '@/components/AppShell';
 import RunView from '@/components/RunView';
 import { AgentError, emptyRun, parseArxivId, runAgent, type AgentRun } from '@/lib/agent';
 import { usePrefs } from '@/lib/prefs';
+import { SuiteFaq, SuiteCta } from '@/components/SuiteFooter';
 import { listRecentSessions, noteCount, saveSession, type SessionRecord } from '@/lib/sessions';
 import { cn } from '@/lib/utils';
 
 type Banner = { tone: 'error' | 'warning' | 'info'; text: string } | null;
+
+
+const FAQ = {
+  en: [
+    { q: 'How is this different from asking a chatbot about a paper?', a: 'The agent plans first, searches arXiv, reads the full text in slices, saves quoted notes and only then writes the answer, with a citation for every claim. Afterwards it checks its own answer against those notes and marks what it could not verify.' },
+    { q: 'Can I see how it got to the answer?', a: 'Yes. Every finished session shows the plan, each tool call, the saved notes and the final answer. You can open any recent session from the list below.' },
+    { q: 'Which papers does it read?', a: 'Papers on arXiv. Give an arXiv id or link to anchor the question, or leave it blank and let the agent search.' },
+    { q: 'Can I trust the answer?', a: 'Treat it as a reading aid. Each statement points to a quoted passage, so you can check the source yourself before you cite it.' },
+    { q: 'Are my questions public?', a: 'Finished sessions are shared in Recent questions. Do not enter private or unpublished material.' },
+  ],
+  zh: [
+    { q: '这和直接问聊天机器人有什么不同？', a: '智能体先制定计划，搜索 arXiv，分段阅读全文，保存引用笔记，然后才写答案，且每个结论都带出处。写完后还会对照笔记检查自己的答案，并标出无法核实的部分。' },
+    { q: '我能看到它是怎么得出答案的吗？', a: '可以。每个完成的会话都会展示计划、每次工具调用、保存的笔记和最终答案。你可以从下方列表打开任意最近的会话。' },
+    { q: '它读哪些论文？', a: 'arXiv 上的论文。可以填写 arXiv 编号或链接来锁定问题，也可以留空，让智能体自己搜索。' },
+    { q: '答案可信吗？', a: '请把它当作阅读辅助。每条陈述都指向一段引文，引用前请自行核对原文。' },
+    { q: '我的问题会公开吗？', a: '完成的会话会显示在“最近的问题”中。请勿输入私密或未发表的内容。' },
+  ],
+};
 
 export default function Index() {
   const { t, lang } = usePrefs();
@@ -140,6 +159,17 @@ export default function Index() {
                 </li>
               ))}
             </ol>
+            <figure className="sfm mt-8" aria-label={lang === 'zh' ? '示例流程' : 'Example flow'}>
+              <div className="sfm-top"><span className="sfm-chip">{lang === 'zh' ? '示例流程' : 'Example flow'}</span><span className="sfm-dots" aria-hidden><i /><i /><i /></span></div>
+              <div className="sfm-steps">
+                {(lang === 'zh' ? ['制定计划', '搜索 arXiv', '分段阅读全文', '保存引文笔记'] : ['Plan the question', 'Search arXiv', 'Read the full text in slices', 'Save quoted notes']).map((x) => (
+                  <div key={x} className="sfm-step"><b>✓</b><span>{x}</span></div>
+                ))}
+                <div className="sfm-step todo"><b>5</b><span>{lang === 'zh' ? '带引用作答，再检查自己的答案' : 'Answer with citations, then check it'}</span></div>
+              </div>
+              <div className="sfm-lines" style={{ marginTop: 14 }}><i /><i /><i /></div>
+              <p className="sfm-cap">{lang === 'zh' ? '每条陈述都链接到一段引文' : 'Every line links to a quote'}<span className="sfm-cite">[1]</span><span className="sfm-cite">[2]</span></p>
+            </figure>
           </div>
         </div>
 
@@ -292,9 +322,14 @@ export default function Index() {
         )}
       </section>
 
-      <footer className="mt-12 border-t border-border pt-6">
-        <p className="text-[12.5px] text-subtle">{t('footer')}</p>
-      </footer>
+      <SuiteFaq lang={lang} id="faq" items={FAQ[lang]} />
+      <SuiteCta
+        title={lang === 'zh' ? '有一篇想读懂的论文？' : 'Got a paper you need to understand?'}
+        body={lang === 'zh' ? '提出问题，获得带引用的答案。' : 'Ask a question. Get an answer with citations.'}
+        label={lang === 'zh' ? '提问' : 'Ask a question'}
+        href="#ask"
+        onClick={() => document.getElementById('ask')?.scrollIntoView({ behavior: 'smooth' })}
+      />
     </AppShell>
   );
 }
