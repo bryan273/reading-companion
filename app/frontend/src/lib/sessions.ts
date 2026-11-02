@@ -82,7 +82,7 @@ export async function listRecentSessions(limit = 12): Promise<SessionRecord[]> {
     limit,
     fields: ['share_id', 'goal', 'paper_id', 'language', 'total_tokens', 'turns', 'notes_json'],
   });
-  return res.items ?? [];
+  return (res.items ?? []).filter((r) => noteCount(r) > 0);
 }
 
 export async function getSessionByShareId(shareId: string): Promise<SavedSession | null> {

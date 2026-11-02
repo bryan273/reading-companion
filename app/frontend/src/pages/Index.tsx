@@ -99,7 +99,7 @@ export default function Index() {
       abortRef.current = null;
     }
 
-    if (finished) {
+    if (finished && finished.notes.length > 0) {
       setSaveState('saving');
       try {
         const id = await saveSession(finished, g, paperId, lang);
