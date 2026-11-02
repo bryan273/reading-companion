@@ -108,7 +108,11 @@ export default function Index() {
     } catch (e) {
       if (e instanceof AgentError && e.kind === 'rate') setBanner({ tone: 'warning', text: t('rateLimit') });
       else if (e instanceof AgentError && e.kind === 'aborted') setBanner({ tone: 'info', text: t('aborted') });
-      else setBanner({ tone: 'error', text: t('errorGeneric', { msg: e instanceof Error ? e.message : String(e) }) });
+      else {
+        const raw = e instanceof Error ? e.message : String(e);
+        const lost = /failed to fetch|load failed|networkerror|network request failed/i.test(raw);
+        setBanner({ tone: 'error', text: lost ? (lang === 'zh' ? '网络连接中断。请检查网络后重试。' : 'The connection was lost. Check your network and try again.') : t('errorGeneric', { msg: raw }) });
+      }
       setRun((r) => (r ? { ...r, stage: r.stage === 'done' ? 'done' : r.stage } : r));
     } finally {
       setRunning(false);
