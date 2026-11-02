@@ -1,3 +1,4 @@
+import { FeatureBento, GradLast, type Feature } from '@/components/SuiteUI';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { ArrowRight, Check, Copy, Loader2, Square } from 'lucide-react';
@@ -26,6 +27,21 @@ const FAQ = {
     { q: '它读哪些论文？', a: 'arXiv 上的论文。可以填写 arXiv 编号或链接来锁定问题，也可以留空，让智能体自己搜索。' },
     { q: '答案可信吗？', a: '请把它当作阅读辅助。每条陈述都指向一段引文，引用前请自行核对原文。' },
     { q: '我的问题会公开吗？', a: '完成的会话会显示在“最近的问题”中。请勿输入私密或未发表的内容。' },
+  ],
+};
+
+const READ_STEPS: Record<'en' | 'zh', Feature[]> = {
+  en: [
+    { t: 'Plans first', p: 'Before it opens a paper, the agent writes the steps it will take. You see the plan and every tool call.', d: 'M9 5H5v14h14v-4M9 5V3h6v2M9 5h6M9 12l2 2 4-4' },
+    { t: 'Reads the full text', p: 'It searches arXiv and reads the paper in slices, not just the abstract.', d: 'M4 5a2 2 0 012-2h12v16H6a2 2 0 00-2 2V5zM8 7h6M8 11h6' },
+    { t: 'Saves quoted notes', p: 'Each finding is saved with a verbatim quote and a link to the place it came from.', d: 'M7 8h10M7 12h6M5 4h14a1 1 0 011 1v14l-4-3H5a1 1 0 01-1-1V5a1 1 0 011-1z' },
+    { t: 'Checks itself', p: 'After answering, it re-reads its notes and marks any claim it could not support. Finished sessions are shared on the page.', d: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
+  ],
+  zh: [
+    { t: '先做计划', p: '打开论文之前，智能体先写出要做的步骤。你能看到计划和每一次工具调用。', d: 'M9 5H5v14h14v-4M9 5V3h6v2M9 5h6M9 12l2 2 4-4' },
+    { t: '读取全文', p: '它会搜索 arXiv，并分段阅读整篇论文，而不只是摘要。', d: 'M4 5a2 2 0 012-2h12v16H6a2 2 0 00-2 2V5zM8 7h6M8 11h6' },
+    { t: '保存带引文的笔记', p: '每条发现都附带一句原文引文，并链接到出处。', d: 'M7 8h10M7 12h6M5 4h14a1 1 0 011 1v14l-4-3H5a1 1 0 01-1-1V5a1 1 0 011-1z' },
+    { t: '自我核查', p: '回答之后会重读笔记，标出无法支持的论断。完成的会话会公开显示在页面上。', d: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
   ],
 };
 
@@ -130,8 +146,8 @@ export default function Index() {
     <AppShell>
       <div className="grid gap-8 xl:grid-cols-[minmax(0,1fr)_minmax(0,400px)] xl:gap-10">
         <div className="min-w-0">
-          <p className="eyebrow text-accent-foreground">{t('heroKicker')}</p>
-          <h1 className="mt-2.5 text-[30px] leading-[1.08] sm:text-[40px]">{t('heroTitle')}</h1>
+          <span className="su-pill"><i />{t('heroKicker')}</span>
+          <h1 className="mt-2.5 text-[30px] leading-[1.08] sm:text-[44px]"><GradLast text={t('heroTitle')} words={4} /></h1>
           <p className="mt-4 max-w-[54ch] text-[15px] leading-7 text-muted-foreground sm:text-[16px]">{t('heroSub')}</p>
 
           <div id="examples" className="mt-8 scroll-mt-20">
@@ -321,6 +337,14 @@ export default function Index() {
           </ul>
         )}
       </section>
+
+      <FeatureBento
+        id="how"
+        eyebrow={lang === 'zh' ? '它如何回答' : 'How it answers'}
+        title={lang === 'zh' ? '先读，再记，最后才回答。' : 'It reads, takes notes, and only then answers.'}
+        lead={lang === 'zh' ? '每一步都显示在页面上，你可以逐条核对。' : 'Every step is shown on the page, so you can check each one.'}
+        items={READ_STEPS[lang]}
+      />
 
       <SuiteFaq lang={lang} id="faq" items={FAQ[lang]} />
       <SuiteCta
