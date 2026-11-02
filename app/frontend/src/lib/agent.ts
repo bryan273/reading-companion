@@ -534,7 +534,7 @@ export async function runAgent({ goal, paperId, lang, signal, onUpdate }: RunOpt
         messages.push({ role: 'assistant', content: msg.content });
         messages.push({
           role: 'user',
-          content: 'You have not saved any notes yet. Read the relevant source and save notes with verbatim quotes before answering.',
+          content: '[Automatic reminder from the tool, not a message from the user. The user has not replied. Do not mention this reminder or say the user is right.] No notes are saved yet. Read the relevant source and save notes with verbatim quotes before answering. If the question cannot be answered from arXiv papers, say so plainly in one or two sentences.',
         });
         emit();
         continue;
