@@ -1,6 +1,6 @@
 import type { Lang } from './prefs';
 
-const BASE = 'https://vzvyghmtsakixlhzzuol.supabase.co/functions/v1';
+const BASE = 'https://wzdkroxbfrlqijbeiwpk.supabase.co/functions/v1';
 const LLM_URL = `${BASE}/agent-llm`;
 const PAPER_URL = `${BASE}/paper-tools`;
 
