@@ -10,7 +10,7 @@ const T = {
 
 /** Four-column footer shared by every app of the suite. */
 export function SuiteFooter({ lang, appId, note }: { lang: Lang; appId: string; note?: string }) {
-  const t = T[lang];
+  const t = T[lang] ?? T.en;
   const pick = (ids: string[]) => SUITE.filter((s) => ids.includes(s.id));
   const col = (title: string, items: { label: string; href: string; id: string }[]) => (
     <nav className="sft-col" aria-label={title}>
@@ -50,7 +50,7 @@ export function SuiteFaq({ items, title, lang, id }: { items: FaqItem[]; title?:
   const [open, setOpen] = useState<number | null>(0);
   return (
     <section className="sff" id={id} aria-labelledby={`${id ?? 'faq'}-h`}>
-      <h2 id={`${id ?? 'faq'}-h`}>{title ?? T[lang].faq}</h2>
+      <h2 id={`${id ?? 'faq'}-h`}>{title ?? (T[lang] ?? T.en).faq}</h2>
       <div className="sff-list">
         {items.map((it, i) => (
           <details key={i} open={open === i} onToggle={(e) => { if ((e.currentTarget as HTMLDetailsElement).open) setOpen(i); else if (open === i) setOpen(null); }}>

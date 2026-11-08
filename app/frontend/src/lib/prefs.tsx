@@ -1,6 +1,6 @@
 import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
 
-export type Lang = 'en' | 'zh';
+export type Lang = 'en' | 'zh' | 'vi' | 'id';
 type Theme = 'light' | 'dark';
 
 const en = {
@@ -164,8 +164,166 @@ const zh: Strings = {
   navAllApps: '全部应用',
 };
 
+const vi: Strings = {
+  brand: 'Reading Companion',
+  partOfSuite: 'thuộc Paperlit',
+  heroKicker: 'Tác tử nghiên cứu arXiv',
+  heroTitle: 'Hiểu nhanh một bài báo và biết từng dòng đến từ đâu.',
+  heroSub: 'Tác tử lập kế hoạch, tìm trên arXiv, đọc toàn văn theo từng đoạn, lưu ghi chú có trích dẫn, trả lời kèm nguồn rồi tự kiểm tra câu trả lời.',
+  goalLabel: 'Bạn muốn biết điều gì?',
+  goalPlaceholder: 'ví dụ: Kết quả chính của bài báo này là gì và được đo như thế nào?',
+  paperLabel: 'Mã arXiv hoặc liên kết (không bắt buộc)',
+  paperPlaceholder: '1607.01759 hoặc https://arxiv.org/abs/1607.01759',
+  paperInvalid: 'Có vẻ đây không phải mã arXiv hoặc liên kết hợp lệ.',
+  goalRequired: 'Hãy mô tả điều bạn muốn biết.',
+  start: 'Bắt đầu đọc',
+  stop: 'Dừng',
+  examples: 'Ví dụ câu hỏi',
+  ex1: 'Kết quả chính của arXiv 1607.01759 là gì và được đo như thế nào?',
+  ex2: 'Tìm các bài báo gần đây về phát hiện bất thường bằng isolation forest và so sánh các tuyên bố của chúng',
+  ex3: 'arXiv 2601.03664 có công bố mã nguồn không và dùng những tập dữ liệu nào?',
+  recent: 'Câu hỏi gần đây',
+  recentSub: 'Các phiên đã hoàn thành do người đọc chia sẻ. Mở một phiên để xem kế hoạch, lệnh gọi công cụ, ghi chú và câu trả lời.',
+  recentEmpty: 'Chưa có phiên nào được lưu. Các phiên hoàn thành sẽ xuất hiện ở đây.',
+  recentError: 'Không tải được các câu hỏi gần đây.',
+  stagePlan: 'Kế hoạch',
+  stageTools: 'Gọi công cụ',
+  stageNotes: 'Ghi chú',
+  stageAnswer: 'Câu trả lời',
+  stageSelfcheck: 'Tự kiểm tra',
+  planDrafting: 'Đang soạn kế hoạch…',
+  toolsWaiting: 'Các lệnh gọi công cụ sẽ hiện ở đây khi tác tử làm việc.',
+  turn: 'Lượt',
+  notesSummary: 'Đã lưu {n} ghi chú, {f} ghi chú khớp với toàn văn.',
+  notesNone: 'Chưa có ghi chú.',
+  answerWaiting: 'Câu trả lời xuất hiện sau khi tác tử đọc xong.',
+  checkWaiting: 'Chạy sau câu trả lời: tác tử đọc lại ghi chú của mình.',
+  checkAllGood: 'Mọi ghi chú được trích dẫn đều khớp với toàn văn bài báo.',
+  unverified: 'chưa xác minh',
+  missingNote: 'không có ghi chú khớp',
+  notesTitle: 'Ghi chú và nguồn',
+  notesEmpty: 'Mỗi phát hiện mà tác tử lưu sẽ hiện ở đây cùng mã bài báo, một đoạn trích ngắn và liên kết.',
+  vFulltext: 'Toàn văn',
+  vAbstract: 'Chỉ có tóm tắt',
+  vUnmatched: 'Không tìm thấy đoạn trích',
+  openArxiv: 'Mở trên arXiv',
+  sources: 'Nguồn',
+  turns: '{n} / {max} lượt',
+  tokens: '{n} token',
+  rateLimit: 'Dịch vụ đọc đang bận. Hãy đợi một phút rồi thử lại.',
+  errorGeneric: 'Có lỗi xảy ra: {msg}',
+  aborted: 'Đã dừng. Kết quả một phần được hiển thị bên dưới và chưa được lưu.',
+  saving: 'Đang lưu phiên…',
+  saved: 'Đã lưu phiên.',
+  saveFailed: 'Không lưu được phiên này: {msg}',
+  copyLink: 'Sao chép liên kết chia sẻ',
+  copied: 'Đã sao chép liên kết',
+  newQuestion: 'Câu hỏi mới',
+  goal: 'Mục tiêu',
+  sharedSession: 'Phiên được chia sẻ',
+  notFound: 'Không tìm thấy phiên này.',
+  loading: 'Đang tải…',
+  backHome: 'Về trang chủ',
+  toggleTheme: 'Chuyển chế độ sáng và tối',
+  toDark: 'Chuyển sang chế độ tối',
+  toLight: 'Chuyển sang chế độ sáng',
+  langLabel: 'Ngôn ngữ giao diện',
+  menu: 'Menu',
+  closeMenu: 'Đóng menu',
+  openNewTab: 'mở trong tab mới',
+  running: 'Đang làm việc',
+  done: 'Xong',
+  noHtml: 'Không có toàn văn HTML; chỉ dùng tóm tắt',
+  footer: 'Câu trả lời do tác tử AI tạo ra. Hãy kiểm tra các nguồn được trích dẫn trước khi dùng.',
+  navAsk: 'Đặt câu hỏi',
+  navSuite: 'Paperlit',
+  navPaperExplainer: 'Học qua video',
+  navReproAgent: 'Kiểm chứng kết quả',
+  navBenchmark: 'Đánh giá chuẩn',
+  navAllApps: 'Tất cả ứng dụng',
+};
+
+const id: Strings = {
+  brand: 'Reading Companion',
+  partOfSuite: 'bagian dari Paperlit',
+  heroKicker: 'Agen riset arXiv',
+  heroTitle: 'Pahami makalah dengan cepat dan ketahui dari mana asal setiap baris.',
+  heroSub: 'Agen menyusun rencana, mencari di arXiv, membaca teks lengkap per potongan, menyimpan catatan berkutipan, menjawab dengan sitasi, lalu memeriksa jawabannya sendiri.',
+  goalLabel: 'Apa yang ingin Anda ketahui?',
+  goalPlaceholder: 'mis. Apa hasil utama makalah ini dan bagaimana pengukurannya?',
+  paperLabel: 'ID atau tautan arXiv (opsional)',
+  paperPlaceholder: '1607.01759 atau https://arxiv.org/abs/1607.01759',
+  paperInvalid: 'Ini tidak terlihat seperti ID atau tautan arXiv.',
+  goalRequired: 'Tolong tuliskan apa yang ingin Anda ketahui.',
+  start: 'Mulai membaca',
+  stop: 'Berhenti',
+  examples: 'Contoh pertanyaan',
+  ex1: 'Apa hasil utama arXiv 1607.01759 dan bagaimana pengukurannya?',
+  ex2: 'Cari makalah terbaru tentang deteksi anomali isolation forest dan bandingkan klaimnya',
+  ex3: 'Apakah arXiv 2601.03664 merilis kode dan dataset apa yang dipakai?',
+  recent: 'Pertanyaan terbaru',
+  recentSub: 'Sesi yang selesai dan dibagikan pembaca. Buka satu untuk melihat rencana, panggilan alat, catatan, dan jawabannya.',
+  recentEmpty: 'Belum ada sesi tersimpan. Sesi yang selesai akan muncul di sini.',
+  recentError: 'Pertanyaan terbaru tidak bisa dimuat.',
+  stagePlan: 'Rencana',
+  stageTools: 'Panggilan alat',
+  stageNotes: 'Catatan',
+  stageAnswer: 'Jawaban',
+  stageSelfcheck: 'Periksa sendiri',
+  planDrafting: 'Menyusun rencana…',
+  toolsWaiting: 'Panggilan alat akan muncul di sini saat agen bekerja.',
+  turn: 'Giliran',
+  notesSummary: '{n} catatan disimpan, {f} cocok dengan teks lengkap.',
+  notesNone: 'Belum ada catatan.',
+  answerWaiting: 'Jawaban muncul setelah agen selesai membaca.',
+  checkWaiting: 'Berjalan setelah jawaban: agen membaca ulang catatannya.',
+  checkAllGood: 'Setiap catatan yang dikutip cocok dengan teks lengkap makalah.',
+  unverified: 'belum diverifikasi',
+  missingNote: 'tidak ada catatan yang cocok',
+  notesTitle: 'Catatan dan sumber',
+  notesEmpty: 'Setiap temuan yang disimpan agen muncul di sini dengan ID makalah, kutipan singkat, dan tautan.',
+  vFulltext: 'Teks lengkap',
+  vAbstract: 'Hanya abstrak',
+  vUnmatched: 'Kutipan tidak ditemukan',
+  openArxiv: 'Buka di arXiv',
+  sources: 'Sumber',
+  turns: '{n} / {max} giliran',
+  tokens: '{n} token',
+  rateLimit: 'Layanan membaca sedang sibuk. Tunggu semenit lalu coba lagi.',
+  errorGeneric: 'Terjadi kesalahan: {msg}',
+  aborted: 'Dihentikan. Hasil sebagian ditampilkan di bawah dan tidak disimpan.',
+  saving: 'Menyimpan sesi…',
+  saved: 'Sesi disimpan.',
+  saveFailed: 'Sesi ini tidak bisa disimpan: {msg}',
+  copyLink: 'Salin tautan bagikan',
+  copied: 'Tautan disalin',
+  newQuestion: 'Pertanyaan baru',
+  goal: 'Tujuan',
+  sharedSession: 'Sesi yang dibagikan',
+  notFound: 'Sesi ini tidak ditemukan.',
+  loading: 'Memuat…',
+  backHome: 'Kembali ke beranda',
+  toggleTheme: 'Ganti mode terang dan gelap',
+  toDark: 'Beralih ke mode gelap',
+  toLight: 'Beralih ke mode terang',
+  langLabel: 'Bahasa antarmuka',
+  menu: 'Menu',
+  closeMenu: 'Tutup menu',
+  openNewTab: 'dibuka di tab baru',
+  running: 'Bekerja',
+  done: 'Selesai',
+  noHtml: 'Tidak ada teks lengkap HTML; hanya abstrak',
+  footer: 'Jawaban dibuat oleh agen AI. Periksa sumber yang dikutip sebelum Anda mengutipnya.',
+  navAsk: 'Ajukan pertanyaan',
+  navSuite: 'Paperlit',
+  navPaperExplainer: 'Belajar lewat video',
+  navReproAgent: 'Periksa hasilnya',
+  navBenchmark: 'Tolok ukur',
+  navAllApps: 'Semua aplikasi',
+};
+
 export type StringKey = keyof Strings;
-const STRINGS: Record<Lang, Strings> = { en, zh };
+const STRINGS: Record<Lang, Strings> = { en, zh, vi, id };
 
 interface PrefsValue {
   lang: Lang;
@@ -185,9 +343,10 @@ function initialTheme(): Theme {
 }
 
 function initialLang(): Lang {
-  const saved = localStorage.getItem('rc_lang');
-  if (saved === 'en' || saved === 'zh') return saved;
-  return navigator.language?.toLowerCase().startsWith('zh') ? 'zh' : 'en';
+  const saved = localStorage.getItem('suite-lang') || localStorage.getItem('rc_lang');   // one language for every Paperlit app
+  if (saved === 'en' || saved === 'zh' || saved === 'vi' || saved === 'id') return saved;
+  const nav = (navigator.language || '').toLowerCase();
+  return nav.startsWith('zh') ? 'zh' : nav.startsWith('vi') ? 'vi' : nav.startsWith('id') ? 'id' : 'en';
 }
 
 export function PrefsProvider({ children }: { children: ReactNode }) {
@@ -201,8 +360,10 @@ export function PrefsProvider({ children }: { children: ReactNode }) {
   }, [theme]);
 
   useEffect(() => {
-    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : 'en';
+    document.documentElement.lang = lang === 'zh' ? 'zh-CN' : lang;
+    if (lang === 'vi' && !document.getElementById('vi-font')) { const l = document.createElement('link'); l.id = 'vi-font'; l.rel = 'stylesheet'; l.href = 'https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&display=swap'; document.head.appendChild(l); }
     localStorage.setItem('rc_lang', lang);
+    localStorage.setItem('suite-lang', lang);
   }, [lang]);
 
   const t = useCallback(

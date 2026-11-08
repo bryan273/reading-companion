@@ -28,9 +28,23 @@ const FAQ = {
     { q: '答案可信吗？', a: '请把它当作阅读辅助。每条陈述都指向一段引文，引用前请自行核对原文。' },
     { q: '我的问题会公开吗？', a: '完成的会话会显示在“最近的问题”中。请勿输入私密或未发表的内容。' },
   ],
+  vi: [
+    { q: 'Cái này khác gì hỏi chatbot về một bài báo?', a: 'Tác tử lập kế hoạch trước, tìm trên arXiv, đọc toàn văn theo từng đoạn, lưu ghi chú có trích dẫn rồi mới viết câu trả lời, mỗi nhận định đều kèm nguồn. Sau đó nó tự kiểm tra câu trả lời của mình.' },
+    { q: 'Tôi có xem được cách nó đi đến câu trả lời không?', a: 'Có. Mỗi phiên hoàn thành đều hiển thị kế hoạch, từng lệnh gọi công cụ, các ghi chú đã lưu và câu trả lời cuối. Bạn có thể mở bất kỳ phiên gần đây nào trong danh sách bên dưới.' },
+    { q: 'Nó đọc những bài báo nào?', a: 'Các bài trên arXiv. Hãy đưa mã hoặc liên kết arXiv để neo câu hỏi, hoặc để trống và để tác tử tự tìm.' },
+    { q: 'Tôi có thể tin câu trả lời không?', a: 'Hãy coi đây là công cụ hỗ trợ đọc. Mỗi câu đều chỉ tới một đoạn trích, nên bạn có thể tự kiểm tra nguồn trước khi trích dẫn.' },
+    { q: 'Câu hỏi của tôi có công khai không?', a: 'Các phiên hoàn thành được chia sẻ trong mục Câu hỏi gần đây. Đừng nhập tài liệu riêng tư hoặc chưa công bố.' },
+  ],
+  id: [
+    { q: 'Apa bedanya dengan bertanya ke chatbot tentang sebuah makalah?', a: 'Agen menyusun rencana dulu, mencari di arXiv, membaca teks lengkap per potongan, menyimpan catatan berkutipan, baru menulis jawaban, dengan sitasi untuk setiap klaim. Setelah itu ia memeriksa jawabannya sendiri.' },
+    { q: 'Bisakah saya melihat bagaimana ia sampai pada jawaban?', a: 'Bisa. Setiap sesi yang selesai menampilkan rencana, tiap panggilan alat, catatan yang disimpan, dan jawaban akhir. Anda bisa membuka sesi terbaru mana pun dari daftar di bawah.' },
+    { q: 'Makalah mana yang dibacanya?', a: 'Makalah di arXiv. Berikan ID atau tautan arXiv untuk menjangkar pertanyaan, atau kosongkan dan biarkan agen mencari.' },
+    { q: 'Bisakah saya memercayai jawabannya?', a: 'Anggap ini alat bantu baca. Setiap pernyataan menunjuk ke kutipan, jadi Anda bisa memeriksa sumbernya sendiri sebelum mengutipnya.' },
+    { q: 'Apakah pertanyaan saya publik?', a: 'Sesi yang selesai dibagikan di Pertanyaan terbaru. Jangan masukkan materi pribadi atau yang belum dipublikasikan.' },
+  ],
 };
 
-const READ_STEPS: Record<'en' | 'zh', Feature[]> = {
+const READ_STEPS: Record<'en' | 'zh' | 'vi' | 'id', Feature[]> = {
   en: [
     { t: 'Plans first', p: 'Before it opens a paper, the agent writes the steps it will take. You see the plan and every tool call.', d: 'M9 5H5v14h14v-4M9 5V3h6v2M9 5h6M9 12l2 2 4-4' },
     { t: 'Reads the full text', p: 'It searches arXiv and reads the paper in slices, not just the abstract.', d: 'M4 5a2 2 0 012-2h12v16H6a2 2 0 00-2 2V5zM8 7h6M8 11h6' },
@@ -43,10 +57,23 @@ const READ_STEPS: Record<'en' | 'zh', Feature[]> = {
     { t: '保存带引文的笔记', p: '每条发现都附带一句原文引文，并链接到出处。', d: 'M7 8h10M7 12h6M5 4h14a1 1 0 011 1v14l-4-3H5a1 1 0 01-1-1V5a1 1 0 011-1z' },
     { t: '自我核查', p: '回答之后会重读笔记，标出无法支持的论断。完成的会话会公开显示在页面上。', d: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
   ],
+  vi: [
+    { t: 'Lập kế hoạch trước', p: 'Trước khi mở bài báo, tác tử viết ra các bước sẽ làm. Bạn thấy kế hoạch và từng lệnh gọi công cụ.', d: 'M9 5H5v14h14v-4M9 5V3h6v2M9 5h6M9 12l2 2 4-4' },
+    { t: 'Đọc toàn văn', p: 'Nó tìm trên arXiv và đọc bài báo theo từng đoạn, không chỉ phần tóm tắt.', d: 'M4 5a2 2 0 012-2h12v16H6a2 2 0 00-2 2V5zM8 7h6M8 11h6' },
+    { t: 'Lưu ghi chú có trích dẫn', p: 'Mỗi phát hiện được lưu cùng một đoạn trích nguyên văn và liên kết tới nơi nó xuất hiện.', d: 'M7 8h10M7 12h6M5 4h14a1 1 0 011 1v14l-4-3H5a1 1 0 01-1-1V5a1 1 0 011-1z' },
+    { t: 'Tự kiểm tra', p: 'Sau khi trả lời, nó đọc lại ghi chú và đánh dấu mọi nhận định không có căn cứ. Các phiên hoàn thành được chia sẻ trên trang.', d: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
+  ],
+  id: [
+    { t: 'Merencanakan dulu', p: 'Sebelum membuka makalah, agen menulis langkah yang akan diambil. Anda melihat rencana dan setiap panggilan alat.', d: 'M9 5H5v14h14v-4M9 5V3h6v2M9 5h6M9 12l2 2 4-4' },
+    { t: 'Membaca teks lengkap', p: 'Ia mencari di arXiv dan membaca makalah per potongan, bukan hanya abstrak.', d: 'M4 5a2 2 0 012-2h12v16H6a2 2 0 00-2 2V5zM8 7h6M8 11h6' },
+    { t: 'Menyimpan catatan berkutipan', p: 'Setiap temuan disimpan dengan kutipan persis dan tautan ke asalnya.', d: 'M7 8h10M7 12h6M5 4h14a1 1 0 011 1v14l-4-3H5a1 1 0 01-1-1V5a1 1 0 011-1z' },
+    { t: 'Memeriksa diri sendiri', p: 'Setelah menjawab, ia membaca ulang catatannya dan menandai klaim yang tidak bisa didukung. Sesi yang selesai dibagikan di halaman.', d: 'M12 3l8 3v6c0 5-3.5 8-8 9-4.5-1-8-4-8-9V6l8-3zM9 12l2 2 4-4' },
+  ],
 };
 
 export default function Index() {
   const { t, lang } = usePrefs();
+  const tr = (zh: string, en: string, vi: string, idn: string) => (lang === 'zh' ? zh : lang === 'vi' ? vi : lang === 'id' ? idn : en);
   const [goal, setGoal] = useState('');
   const [paper, setPaper] = useState('');
   const [formError, setFormError] = useState('');
@@ -111,7 +138,7 @@ export default function Index() {
       else {
         const raw = e instanceof Error ? e.message : String(e);
         const lost = /failed to fetch|load failed|networkerror|network request failed/i.test(raw);
-        setBanner({ tone: 'error', text: lost ? (lang === 'zh' ? '网络连接中断。请检查网络后重试。' : 'The connection was lost. Check your network and try again.') : t('errorGeneric', { msg: raw }) });
+        setBanner({ tone: 'error', text: lost ? (tr('网络连接中断。请检查网络后重试。', 'The connection was lost. Check your network and try again.', 'Mất kết nối. Hãy kiểm tra mạng rồi thử lại.', 'Koneksi terputus. Periksa jaringan Anda lalu coba lagi.')) : t('errorGeneric', { msg: raw }) });
       }
       setRun((r) => (r ? { ...r, stage: r.stage === 'done' ? 'done' : r.stage } : r));
     } finally {
@@ -179,16 +206,16 @@ export default function Index() {
                 </li>
               ))}
             </ol>
-            <figure className="sfm mt-8" aria-label={lang === 'zh' ? '示例流程' : 'Example flow'}>
-              <div className="sfm-top"><span className="sfm-chip">{lang === 'zh' ? '示例流程' : 'Example flow'}</span><span className="sfm-dots" aria-hidden><i /><i /><i /></span></div>
+            <figure className="sfm mt-8" aria-label={tr('示例流程', 'Example flow', 'Luồng ví dụ', 'Contoh alur')}>
+              <div className="sfm-top"><span className="sfm-chip">{tr('示例流程', 'Example flow', 'Luồng ví dụ', 'Contoh alur')}</span><span className="sfm-dots" aria-hidden><i /><i /><i /></span></div>
               <div className="sfm-steps">
-                {(lang === 'zh' ? ['制定计划', '搜索 arXiv', '分段阅读全文', '保存引文笔记'] : ['Plan the question', 'Search arXiv', 'Read the full text in slices', 'Save quoted notes']).map((x) => (
+                {(lang === 'zh' ? ['制定计划', '搜索 arXiv', '分段阅读全文', '保存引文笔记'] : lang === 'vi' ? ['Lập kế hoạch cho câu hỏi', 'Tìm trên arXiv', 'Đọc toàn văn theo từng đoạn', 'Lưu ghi chú có trích dẫn'] : lang === 'id' ? ['Rencanakan pertanyaan', 'Cari di arXiv', 'Baca teks lengkap per potongan', 'Simpan catatan berkutipan'] : ['Plan the question', 'Search arXiv', 'Read the full text in slices', 'Save quoted notes']).map((x) => (
                   <div key={x} className="sfm-step"><b>✓</b><span>{x}</span></div>
                 ))}
-                <div className="sfm-step todo"><b>5</b><span>{lang === 'zh' ? '带引用作答，再检查自己的答案' : 'Answer with citations, then check it'}</span></div>
+                <div className="sfm-step todo"><b>5</b><span>{tr('带引用作答，再检查自己的答案', 'Answer with citations, then check it', 'Trả lời kèm trích dẫn, rồi kiểm tra lại', 'Jawab dengan sitasi, lalu periksa')}</span></div>
               </div>
               <div className="sfm-lines" style={{ marginTop: 14 }}><i /><i /><i /></div>
-              <p className="sfm-cap">{lang === 'zh' ? '每条陈述都链接到一段引文' : 'Every line links to a quote'}<span className="sfm-cite">[1]</span><span className="sfm-cite">[2]</span></p>
+              <p className="sfm-cap">{tr('每条陈述都链接到一段引文', 'Every line links to a quote', 'Mỗi dòng đều liên kết tới một đoạn trích', 'Setiap baris terhubung ke sebuah kutipan')}<span className="sfm-cite">[1]</span><span className="sfm-cite">[2]</span></p>
             </figure>
           </div>
         </div>
@@ -329,9 +356,9 @@ export default function Index() {
                   <p className="line-clamp-3 text-[14px] font-semibold leading-6 [overflow-wrap:anywhere]">{r.goal}</p>
                   <div className="mt-auto flex flex-wrap gap-x-2.5 gap-y-1 pt-3 font-mono text-[11px] text-muted-foreground">
                     {r.paper_id && <span>arXiv {r.paper_id}</span>}
-                    <span>{r.language === 'zh' ? '中文' : 'EN'}</span>
+                    <span>{r.language === 'zh' ? '中文' : String(r.language || 'en').toUpperCase()}</span>
                     <span>
-                      {noteCount(r)} {lang === 'zh' ? '条笔记' : 'notes'}
+                      {noteCount(r)} {tr('条笔记', 'notes', 'ghi chú', 'catatan')}
                     </span>
                     {(r.total_tokens ?? 0) > 0 && <span>{t('tokens', { n: (r.total_tokens ?? 0).toLocaleString() })}</span>}
                   </div>
@@ -344,17 +371,17 @@ export default function Index() {
 
       <FeatureBento
         id="how"
-        eyebrow={lang === 'zh' ? '它如何回答' : 'How it answers'}
-        title={lang === 'zh' ? '先读，再记，最后才回答。' : 'It reads, takes notes, and only then answers.'}
-        lead={lang === 'zh' ? '每一步都显示在页面上，你可以逐条核对。' : 'Every step is shown on the page, so you can check each one.'}
+        eyebrow={tr('它如何回答', 'How it answers', 'Cách tác tử trả lời', 'Cara agen menjawab')}
+        title={tr('先读，再记，最后才回答。', 'It reads, takes notes, and only then answers.', 'Đọc, ghi chú, rồi mới trả lời.', 'Membaca, mencatat, baru menjawab.')}
+        lead={tr('每一步都显示在页面上，你可以逐条核对。', 'Every step is shown on the page, so you can check each one.', 'Mỗi bước đều hiển thị trên trang, bạn có thể kiểm tra từng bước.', 'Setiap langkah ditampilkan di halaman, sehingga Anda bisa memeriksa satu per satu.')}
         items={READ_STEPS[lang]}
       />
 
       <SuiteFaq lang={lang} id="faq" items={FAQ[lang]} />
       <SuiteCta
-        title={lang === 'zh' ? '有一篇想读懂的论文？' : 'Got a paper you need to understand?'}
-        body={lang === 'zh' ? '提出问题，获得带引用的答案。' : 'Ask a question. Get an answer with citations.'}
-        label={lang === 'zh' ? '提问' : 'Ask a question'}
+        title={tr('有一篇想读懂的论文？', 'Got a paper you need to understand?', 'Có bài báo cần hiểu?', 'Punya makalah yang perlu dipahami?')}
+        body={tr('提出问题，获得带引用的答案。', 'Ask a question. Get an answer with citations.', 'Đặt câu hỏi. Nhận câu trả lời có trích dẫn.', 'Ajukan pertanyaan. Dapatkan jawaban dengan sitasi.')}
+        label={tr('提问', 'Ask a question', 'Đặt câu hỏi', 'Ajukan pertanyaan')}
         href="#ask"
         onClick={() => document.getElementById('ask')?.scrollIntoView({ behavior: 'smooth' })}
       />

@@ -228,7 +228,7 @@ interface RunOptions {
   onUpdate: (run: AgentRun) => void;
 }
 
-const langName = (lang: Lang) => (lang === 'zh' ? 'Simplified Chinese (简体中文)' : 'English');
+const langName = (lang: Lang) => (lang === 'zh' ? 'Simplified Chinese (简体中文)' : lang === 'vi' ? 'Vietnamese (Tiếng Việt)' : lang === 'id' ? 'Indonesian (Bahasa Indonesia)' : 'English');
 
 function truncate(s: string, n: number): string {
   const clean = s.replace(/\s+/g, ' ').trim();
@@ -633,6 +633,7 @@ async function selfCheck(
   }
 
   const zh = lang === 'zh';
+  const vi = lang === 'vi', idn = lang === 'id';
   const covered = new Set(items.flatMap((i) => i.notes));
   const sentences = run.answer.split(/(?<=[.!?。！？])\s+|\n+/);
   for (const n of citedNumbers(run.answer)) {
@@ -641,11 +642,11 @@ async function selfCheck(
     const sentence = sentences.find((s) => new RegExp(`\\[(?:[\\d,，\\s]*\\b)?${n}\\b`).test(s));
     const claim = truncate((sentence ?? `[${n}]`).replace(/\[[\d,，\s]+\]/g, ''), 160) || `[${n}]`;
     if (!note) {
-      items.push({ claim, notes: [n], reason: zh ? `引用 [${n}] 没有对应的笔记。` : `Citation [${n}] has no matching note.` });
+      items.push({ claim, notes: [n], reason: zh ? `引用 [${n}] 没有对应的笔记。` : vi ? `Trích dẫn [${n}] không có ghi chú khớp.` : idn ? `Sitasi [${n}] tidak punya catatan yang cocok.` : `Citation [${n}] has no matching note.` });
     } else if (note.verification === 'abstract') {
-      items.push({ claim, notes: [n], reason: zh ? '仅在摘要中找到依据，未在全文中核实。' : 'Supported by the abstract only, not checked against the full text.' });
+      items.push({ claim, notes: [n], reason: zh ? '仅在摘要中找到依据，未在全文中核实。' : vi ? 'Chỉ có căn cứ trong phần tóm tắt, chưa đối chiếu với toàn văn.' : idn ? 'Hanya didukung abstrak, belum dicek terhadap teks lengkap.' : 'Supported by the abstract only, not checked against the full text.' });
     } else if (note.verification === 'unmatched') {
-      items.push({ claim, notes: [n], reason: zh ? '笔记中的引文未在已阅读的原文中找到。' : 'The quote in this note was not found in the text that was read.' });
+      items.push({ claim, notes: [n], reason: zh ? '笔记中的引文未在已阅读的原文中找到。' : vi ? 'Không tìm thấy đoạn trích trong ghi chú này ở phần văn bản đã đọc.' : idn ? 'Kutipan dalam catatan ini tidak ditemukan di teks yang dibaca.' : 'The quote in this note was not found in the text that was read.' });
     }
   }
   if (!summary) {
