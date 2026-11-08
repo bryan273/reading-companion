@@ -3,8 +3,8 @@ import { SuiteFooter } from './SuiteFooter';
 import './suite-topbar.css';
 
 const T = {
-  en: { h: 'This page does not exist', p: 'The link may be old or mistyped. Go back to the start, or open another Repro Suite app.', home: 'Back to the start', hub: 'All apps' },
-  zh: { h: '找不到这个页面', p: '链接可能已过期或输入有误。请回到起点，或打开 Repro Suite 的其他应用。', home: '回到起点', hub: '全部应用' },
+  en: { h: 'This page does not exist', p: 'The link may be old or mistyped. Go back to the start, or open another Paperlit app.', home: 'Back to the start', hub: 'All apps' },
+  zh: { h: '找不到这个页面', p: '链接可能已过期或输入有误。请回到起点，或打开 Paperlit 的其他应用。', home: '回到起点', hub: '全部应用' },
 } as const;
 
 /** Friendly 404 shared by every app of the suite. */
