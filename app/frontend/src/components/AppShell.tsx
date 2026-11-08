@@ -32,7 +32,7 @@ export default function AppShell({ children }: { children: ReactNode }) {
 
   return (
     <div className="min-h-screen bg-background">
-      <SuiteTopBar appId="companion" brand={t('brand')} letter="C" homeTo="/#ask" nav={nav} dark={theme === 'dark'} onToggleDark={toggleTheme} lang={lang} onLang={setLang} />
+      <SuiteTopBar appId="companion" brand={t('brand')} letter="C" homeTo="/#ask" nav={nav} dark={theme === 'dark'} onToggleDark={toggleTheme} lang={lang} onLang={setLang} languages={['en', 'zh', 'vi', 'id']} />
       <main id="top" className="mx-auto w-full max-w-[1160px] px-5 pb-16 pt-8 sm:px-8 sm:pt-10">{children}</main>
       <SuiteFooter lang={lang} appId="companion" />
     </div>

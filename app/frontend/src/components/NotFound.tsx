@@ -10,7 +10,7 @@ const T = {
 /** Friendly 404 shared by every app of the suite. */
 export default function NotFound({ appId }: { appId: string }) {
   const lang = (document.documentElement.lang || '').toLowerCase().startsWith('zh') ? 'zh' : 'en';
-  const t = T[lang];
+  const t = T[lang] ?? T.en;
   return (
     <div className="sfn-page">
       <main className="sfn" id="top">
